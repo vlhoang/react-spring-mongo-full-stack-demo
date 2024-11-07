@@ -19,9 +19,9 @@ services:
       context: react-student-management
       dockerfile: Dockerfile
     environment:
-      - baseURL=http://localhost:8080
+      - REACT_APP_API_URL=http://47.129.106.221:8080
     ports:
-      - "80:80"
+      - "3000:3000"
     networks:
       - webnet
 networks:
