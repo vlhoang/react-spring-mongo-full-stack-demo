@@ -1,5 +1,5 @@
-# kubernetes-full-stack-example
-## Trước khi các bạn thực hiện bất cứ step nào khác, đảm bảo project có thể run bởi docker-compose
+# react-spring-mongo-full-stack-demo
+## Trước khi các bạn bắt đầu, đảm bảo project có thể run bởi docker-compose:
 - ```docker-compose -f docker-compose.yaml up -d```
 - Sau đó truy cập vào localhost:80 để xem website. Thử add một vài user, view list users.
 
@@ -13,7 +13,7 @@
 - Dockercompose file build ra static image chạy trên Java OpenJDK, expose port 8080.
 - Docker image nhận biến môi trường: MONGO_URL là url của MongoDB.
 ### Database
-- Sử dụng image sẵn có của Mongo, port 27017.
+- Sử dụng image Mongo, port 27017.
 
 ### Yêu cầu của assignment: Triển khai lên AWS & cấu hình CICD theo 1 trong 2 phương án sau:
 ### Lưu ý: riêng phần CICD, có thể triển khai mono repo hoặc tách frontend, backend thành 2 repo.
@@ -27,7 +27,7 @@
 
 ### Phương án 2:
 - Frontend: Serverside Rendering trên EKS
-- Backend: EKS, ECR.
+- Backend: ECS, ECR.
 - Database: Document DB.
 - Load Balance: ALB
 - CICD sử dụng một trong caá giải pháp: Jenkins, GithubAction hoặc CodePipeline.
@@ -39,7 +39,7 @@
 - Phương án 1: Frontend: S3 + CloudFront, Backend: ECS, DB: Document DB chạy Mongo, kết hợp ALB.
 - Phương án 2: Frontend & Backend đều triển khai lên ECS, DB: Document DB chạy Mongo, kết hợp ALB.
 ### Step thực hiện:
-#### 1. Tạo network (VPC, Subnet), security group & ECS Cluster,ALB, ECR repo cho FE, BE để triển khai ứng dụng.
+#### 1. Tạo network (VPC, Subnet), security group & ECS Cluster,ALB, ECR repository cho FE, BE.
 #### 2. Tạo Document DB (Mongo Engine version 5.0)
 #### 3. ⁠Triển khai Backend
 - Build Dockerimage và push lên ECR. 
@@ -54,5 +54,5 @@
 - Build Frontend tạo ra Docker image, push lên ECR (nếu sd phương án 2).
 - Tạo Frontend Service, lưu ý overwrite REACT_APP_API_URL để frontend nhận diện được backend API. Tạo thêm listener trên ALB /* trỏ tới Frontend (lưu ý thứ tự ưu tiên /api/* phải nằm trên /*).
 #### 5. Test kết nối tới ALB & truy cập ứng dụng.
-
+#### 6. Cấu hình CICD cho repo (monorepo hoặc tách thành 2 repo FE, BE) sử dụng kiến thức đã học.
 ## Chúc các bạn deploy thành công!
