@@ -17,7 +17,15 @@
 
 ### Yêu cầu của assignment: Triển khai lên AWS & cấu hình CICD theo 1 trong 2 phương án sau:
 ### Lưu ý: riêng phần CICD, có thể triển khai mono repo hoặc tách frontend, backend thành 2 repo.
+
 ### Phương án 1:
+- Frontend: Serverside Rendering trên ECS, ECR.
+- Backend: ECS, ECR.
+- Database: Document DB.
+- Load Balance: ALB
+- CICD sử dụng một trong các giải pháp: Jenkins, GithubAction hoặc CodePipeline.
+- Chiến lược deploy cho backend: Rolling update hoặc Blue-Green.
+### Phương án 2:
 - Frontend: S3 + CloudFront.
 - Backend: ECS, ECR.
 - Database: Document DB.
@@ -25,13 +33,7 @@
 - CICD sử dụng một trong các giải pháp: Jenkins, GithubAction hoặc CodePipeline.
 - Chiến lược deploy cho backend: Rolling update hoặc Blue-Green.
 
-### Phương án 2:
-- Frontend: Serverside Rendering trên EKS
-- Backend: ECS, ECR.
-- Database: Document DB.
-- Load Balance: ALB
-- CICD sử dụng một trong các giải pháp: Jenkins, GithubAction hoặc CodePipeline.
-- Chiến lược deploy cho backend: Rolling update hoặc Blue-Green.
+
 
 ### Phương án gợi ý cho kiến trúc 1: Frontend & Backend đều triển khai lên ECS, DB: Document DB chạy Mongo, kết hợp ALB.
 
