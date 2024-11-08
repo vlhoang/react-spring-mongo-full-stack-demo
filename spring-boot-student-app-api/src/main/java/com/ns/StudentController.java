@@ -13,6 +13,7 @@ import java.util.Optional;
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "*") // Add this line to allow all domains
+@RequestMapping("/api")
 public class StudentController {
 
     private final StudentRepository studentRepository;

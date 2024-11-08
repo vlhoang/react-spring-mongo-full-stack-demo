@@ -4,7 +4,6 @@ services:
     container_name: "database"
     ports:
       - 27017:27017
-    command:
   api:
     build:
       context: spring-boot-student-app-api
