@@ -1,9 +1,9 @@
-# react-spring-mongo-full-stack-demo
+## Đây là một hệ thống gồm 3 thành phần: Frontend, Backend & Database dùng để các bạn luyện tập việc triển khai hệ thống lên AWS sử dụng các công nghệ & kiến thức đã học.
 ## Trước khi các bạn bắt đầu, đảm bảo project có thể run bởi docker-compose:
 - ```docker-compose -f docker-compose.yaml up -d```
 - Sau đó truy cập vào localhost:80 để xem website. Thử add một vài user, view list users.
 
-## Giải thích về file cấu trúc project
+## Giải thích về cấu trúc project
 ### Frontend
 - Nodejs project có nhiệm vụ list, add, delete users.
 - Dockercompose file build ra image base trên Node20, expose port 3000.
@@ -13,7 +13,7 @@
 - Dockercompose file build ra static image chạy trên Java OpenJDK, expose port 8080.
 - Docker image nhận biến môi trường: MONGO_URL là url của MongoDB. vd: mongodb://database:27017/dev (*do Mongo local không set password, nếu sd DocumentDB connection URL sẽ khác.)
 ### Database
-- Sử dụng image Mongo, port 27017.
+- Sử dụng image Mongo:5.0, port 27017.
 
 ### Yêu cầu của assignment: Triển khai lên AWS & cấu hình CICD theo 1 trong 2 phương án sau:
 ### Lưu ý: riêng phần CICD, có thể triển khai mono repo hoặc tách frontend, backend thành 2 repo.
@@ -30,29 +30,39 @@
 - Backend: ECS, ECR.
 - Database: Document DB.
 - Load Balance: ALB
-- CICD sử dụng một trong caá giải pháp: Jenkins, GithubAction hoặc CodePipeline.
+- CICD sử dụng một trong các giải pháp: Jenkins, GithubAction hoặc CodePipeline.
 - Chiến lược deploy cho backend: Rolling update hoặc Blue-Green.
 
-### Phương án gợi ý:
-#### ⁠Lựa chọn 1 trong 2 kiến trúc phù hợp: 
+### Phương án gợi ý cho kiến trúc 1: Frontend & Backend đều triển khai lên ECS, DB: Document DB chạy Mongo, kết hợp ALB.
 
-- Phương án 1: Frontend: S3 + CloudFront, Backend: ECS, DB: Document DB chạy Mongo, kết hợp ALB.
-- Phương án 2: Frontend & Backend đều triển khai lên ECS, DB: Document DB chạy Mongo, kết hợp ALB.
 ### Step thực hiện:
-#### 1. Tạo network (VPC, Subnet), security group & ECS Cluster,ALB, ECR repository cho FE, BE.
+#### 1. Tạo network (VPC, Subnet), Security Group & ECS Cluster, ECR repository cho FE, BE.
 #### 2. Tạo Document DB (Mongo Engine version 5.0)
-#### 3. ⁠Triển khai Backend
+#### 3. Tạo sẵn một Application Load Balancer
+- Tạo Application Load Balancer, listener port 80 (hoặc 443 nếu có SSL).
+- Tạo 2 target group: 
+- frontend-tg: Type IP, port 3000, Healthcheck default. 
+- backend-tg:Type IP, port 8080, Healthcheck: /api/students overwrite health checkport 8080
+- Cấu hình trên Application Load Balancer để rule /api/* trỏ vào backend-tg, còn lại default trỏ vào frontend-tg
+#### 4. ⁠Triển khai Backend
 - Build Dockerimage và push lên ECR. 
-- Tạo Backend service, lưu ý overwrite MONGO_URL cho backend. 
-- Cấu hình ALB với listener /api/* trỏ vào backend service. 
-- Test API vd GET <domain-alb>:80/api/students
-#### 4. Triển khai Frontend
-- Build Frontend tạo ra static website & push lên S3 (nếu sd phương án 1) *lưu ý cấu hình môi trường REACT_APP_API_URL trong file .env khi build ra source static để nhận backend URL.
-- Cấu hình CloudFront cho Frontend.
-- Test truy cập tới Frontend thông qua CloudFront URL.
-  
-- Build Frontend tạo ra Docker image, push lên ECR (nếu sd phương án 2).
-- Tạo Frontend Service, lưu ý overwrite REACT_APP_API_URL để frontend nhận diện được backend API. Tạo thêm listener trên ALB /* trỏ tới Frontend (lưu ý thứ tự ưu tiên /api/* phải nằm trên /*).
-#### 5. Test kết nối tới ALB & truy cập ứng dụng.
-#### 6. Cấu hình CICD cho repo (monorepo hoặc tách thành 2 repo FE, BE) sử dụng kiến thức đã học.
+- Tạo Backend Task definition, lưu ý overwrite MONGO_URL cho backend (lưu ý password đang lưu plaintex, cần cải thiện trong tương lai sử dụng Secret Manager)
+- Ví dụ: ```mongodb://linhadmin:thisismypassword@linh-mongo.cluster-cwpdzas1s9oa.ap-southeast-1.docdb.amazonaws.com:27017/dev```
+- Tạo Backend Service, chọn backend-target-group, listener tương ứng.
+- Test API vd GET ```<alb-domain>:80/api/students```, kết quả trả về danh sách students theo dạng Json là OK.
+
+#### 5. Triển khai Frontend
+Phương án sử dụng Static Build (1):
+
+- Build Frontend tạo ra Docker image, push lên ECR.
+- Tạo Frontend Task definition, lưu ý overwrite REACT_APP_API_URL để frontend nhận diện được backend API theo cấu trúc: ```<alb-domain>:80/api```
+- Ví dụ: ```http://linh-test-alb-581342174.ap-southeast-1.elb.amazonaws.com:80/api```
+
+#### 6. Test kết nối tới ALB & truy cập ứng dụng, thử add/delete user
+#### 7. Cấu hình CICD cho repo (monorepo hoặc tách thành 2 repo FE, BE) sử dụng kiến thức đã học.
+
+
+### Phương án gợi ý cho kiến trúc 2: Frontend: S3 + CloudFront, Backend: ECS, DB: Document DB chạy Mongo, kết hợp ALB.
+<Creating>
+
 ## Chúc các bạn deploy thành công!
