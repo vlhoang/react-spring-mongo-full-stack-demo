@@ -40,11 +40,19 @@
 ### Step thực hiện:
 #### 1. Tạo network (VPC, Subnet), Security Group & ECS Cluster, ECR repository cho FE, BE.
 #### 2. Tạo Document DB (Mongo Engine version 5.0)
+- Tạo một Document DB Cluster sử dụng Mongo Engine 5.0. *Trong giao diện tạo Document DB, chọn option: ```Instance Based Cluster```
+- Chọn instance size db.t3.medium, Engine: 5.0.0, Number of instances: 1
+- Đặt username/password cho Cluster. Lưu ý username phải khác ```admin```
+- Cấu hình Security group cần thiết cho Cluster (Port 27017)
+- Tạo một Custom Parameter group, tắt TLS=Disabled, apply cho cluster, restart cluster. *Lý do: Source code cung cấp sẵn chưa work với mode TLS Enabled của Mongo.
+- Sử dụng một EC2 có cài sẵn mongosh hoặc máy local để kết nối thử đến Database. Troubleshoot nếu có issue.
+
+
 #### 3. Tạo sẵn một Application Load Balancer
 - Tạo Application Load Balancer, listener port 80 (hoặc 443 nếu có SSL).
 - Tạo 2 target group: 
 - frontend-tg: Type IP, port 3000, Healthcheck default. 
-- backend-tg:Type IP, port 8080, Healthcheck: /api/students overwrite health checkport 8080
+- backend-tg: Type IP, port 8080, Healthcheck: /api/students overwrite health checkport 8080
 - Cấu hình trên Application Load Balancer để rule /api/* trỏ vào backend-tg, còn lại default trỏ vào frontend-tg
 #### 4. ⁠Triển khai Backend
 - Build Dockerimage và push lên ECR. 
@@ -54,14 +62,12 @@
 - Test API vd GET ```<alb-domain>:80/api/students```, kết quả trả về danh sách students theo dạng Json là OK.
 
 #### 5. Triển khai Frontend
-Phương án sử dụng Static Build (1):
-
 - Build Frontend tạo ra Docker image, push lên ECR.
 - Tạo Frontend Task definition, lưu ý overwrite REACT_APP_API_URL để frontend nhận diện được backend API theo cấu trúc: ```<alb-domain>:80/api```
 - Ví dụ: ```http://linh-test-alb-581342174.ap-southeast-1.elb.amazonaws.com:80/api```
 
 #### 6. Test kết nối tới ALB & truy cập ứng dụng, thử add/delete user
-#### 7. Cấu hình CICD cho repo (monorepo hoặc tách thành 2 repo FE, BE) sử dụng kiến thức đã học.
+#### 7. Optional: Cấu hình CICD cho repo (monorepo hoặc tách thành 2 repo FE, BE) sử dụng kiến thức đã học.
 
 
 ### Phương án gợi ý cho kiến trúc 2: Frontend: S3 + CloudFront, Backend: ECS, DB: Document DB chạy Mongo, kết hợp ALB.

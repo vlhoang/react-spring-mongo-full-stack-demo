@@ -18,3 +18,9 @@ module "vpc" {
     Name = "Udemy DevOps"
   }
 }
+
+# Create subnet group for MongoDB
+resource "aws_docdb_subnet_group" "mongodb_subnet_group" {
+  subnet_ids = module.vpc.private_subnets
+  name       = "udemy-mongodb-subnet-group"
+}

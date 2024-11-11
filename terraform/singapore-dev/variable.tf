@@ -22,8 +22,19 @@ variable "private_subnet_ips" {
   nullable = false
 }
 
-variable "ecr_repo_url" {
+variable "frontend_ecr_repo_url" {
   type = string
-  description = "The URI of the ECR repository for the Node.js application"
+  description = "The URI of the ECR repository for the Frontend application"
   nullable = false
+}
+variable "backend_ecr_repo_url" {
+  type = string
+  description = "The URI of the ECR repository for the Backend application"
+  nullable = false
+}
+variable "db_username" {
+  type = string
+  description = "Admin Username for the database"
+  nullable = false
+  default = "udemy"
 }

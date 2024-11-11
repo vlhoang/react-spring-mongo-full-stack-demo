@@ -35,6 +35,16 @@ module "security" {
   vpc_id = module.networking.vpc_id
 }
 
+module "database"{
+  source = "../modules/database"
+  region = var.region
+  vpc_id = module.networking.vpc_id
+  db_subnets = module.networking.private_subnet_ids
+  db_security_group_ids = [
+    module.security.database_security_group_id
+  ]
+  db_username = var.db_username
+}
 module "load_balance" {
   source                 = "../modules/load_balance"
   region                 = var.region

@@ -24,13 +24,43 @@ variable "alb_arn" {
   description = "The ARN of the Application Load Balancer"
   nullable = false
 }
-variable "nodejs_target_group_arn" {
+variable "frontend_target_group_arn" {
+  type = string
+  description = "The ARN of the target group for the Frontend ECS Service"
+  nullable = false
+}
+variable "frontend_ecr_image_url" {
+  type = string
+  description = "The URI of the ECR repository for the Node.js application"
+  nullable = false
+}
+
+variable "backend_target_group_arn" {
   type = string
   description = "The ARN of the target group for the ECS Service"
   nullable = false
 }
-variable "nodejs_ecr_image_url" {
+variable "backend_ecr_image_url" {
   type = string
   description = "The URI of the ECR repository for the Node.js application"
   nullable = false
+}
+
+variable mongodb_username_secret_arn{
+  type = string
+  description = "The ARN of the secret for MongoDB username"
+  nullable = false
+}
+
+variable mongodb_password_secret_arn{
+  type = string
+  description = "The ARN of the secret for MongoDB password"
+  nullable = false
+}
+
+variable "mongodb_endpoint" {
+  type = string
+  description = "The endpoint of the MongoDB cluster"
+  nullable = false
+  
 }
