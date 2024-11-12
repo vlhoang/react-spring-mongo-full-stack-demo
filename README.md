@@ -65,8 +65,10 @@
 - Build Frontend tạo ra Docker image, push lên ECR.
 - Tạo Frontend Task definition, lưu ý overwrite REACT_APP_API_URL để frontend nhận diện được backend API theo cấu trúc: ```<alb-domain>:80/api```
 - Ví dụ: ```http://linh-test-alb-581342174.ap-southeast-1.elb.amazonaws.com:80/api```
+- Tạo Frontend Service, chọn backend-target-group, listener tương ứng.
 
 #### 6. Test kết nối tới ALB & truy cập ứng dụng, thử add/delete user
+- URL sample: ```http://linh-test-alb-581342174.ap-southeast-1.elb.amazonaws.com:80```
 #### 7. Optional: Cấu hình CICD cho repo (monorepo hoặc tách thành 2 repo FE, BE) sử dụng kiến thức đã học.
 
 
