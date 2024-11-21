@@ -1,7 +1,7 @@
 ## Đây là một hệ thống gồm 3 thành phần: Frontend, Backend & Database dùng để các bạn luyện tập việc triển khai hệ thống lên AWS sử dụng các công nghệ & kiến thức đã học.
 ## Trước khi các bạn bắt đầu, đảm bảo project có thể run bởi docker-compose:
-- ```docker-compose -f docker-compose.yaml up -d```
-- Sau đó truy cập vào localhost:80 để xem website. Thử add một vài user, view list users.
+- `docker-compose -f docker-compose.yaml up -d`
+- Sau đó truy cập vào `localhost:3000` để xem website. Thử add một vài user, view list users.
 
 ## Giải thích về cấu trúc project
 ### Frontend
@@ -40,12 +40,17 @@
 ### Step thực hiện:
 #### 1. Tạo network (VPC, Subnet), Security Group & ECS Cluster, ECR repository cho FE, BE.
 #### 2. Tạo Document DB (Mongo Engine version 5.0)
-- Tạo một Document DB Cluster sử dụng Mongo Engine 5.0. *Trong giao diện tạo Document DB, chọn option: ```Instance Based Cluster```
-- Chọn instance size db.t3.medium, Engine: 5.0.0, Number of instances: 1
-- Đặt username/password cho Cluster. Lưu ý username phải khác ```admin```
-- Cấu hình Security group cần thiết cho Cluster (Port 27017)
-- Tạo một Custom Parameter group, tắt TLS=Disabled, apply cho cluster, restart cluster. *Lý do: Source code cung cấp sẵn chưa work với mode TLS Enabled của Mongo.
-- Sử dụng một EC2 có cài sẵn mongosh hoặc máy local để kết nối thử đến Database. Troubleshoot nếu có issue.
+* Tạo một Custom Parameter group từ Mongo 5.0, tắt TLS=Disabled, save lại.*Lý do: Source code cung cấp sẵn chưa work với mode TLS Enabled của Mongo.
+* Tạo một Document DB Cluster sử dụng Mongo Engine 5.0. *Trong giao diện tạo Document DB, chọn option: ```Instance Based Cluster```
+* Chọn instance size db.t3.medium, Engine: 5.0.0, Number of instances: 1
+* Parameter group: Chọn Parameter group tạo ra ở bước trên.
+* Đặt username/password cho Cluster. Lưu ý username phải khác ```admin```
+* Cấu hình Security group cần thiết cho Cluster (Port 27017)
+* Sử dụng một EC2 có cài sẵn mongosh để kết nối thử đến Database. Troubleshoot nếu có issue.
+*Lưu ý: DocumentDB của AWS hiện không hỗ trợ kết nối từ máy local (thông qua internet) nên bạn buộc phải tạo ra một EC2 instance, cài mongosh lên đó sau đó thử kết nối bằng câu lệnh vd:  
+`mongosh --host linh-test-db.cluster-cwpdzas1s9oa.ap-southeast-1.docdb.amazonaws.com:27017 --username linhadmin --password`  
+Nhập password, Enter
+* Tham khảo link của AWS: `https://docs.aws.amazon.com/documentdb/latest/developerguide/troubleshooting.connecting.html#troubleshooting.cannot-connect.public-endpoints`
 
 
 #### 3. Tạo sẵn một Application Load Balancer
@@ -63,8 +68,10 @@
 
 #### 5. Triển khai Frontend
 - Build Frontend tạo ra Docker image, push lên ECR.
+
 - Tạo Frontend Task definition, lưu ý overwrite REACT_APP_API_URL để frontend nhận diện được backend API theo cấu trúc: ```<alb-domain>:80/api```
 - Ví dụ: ```http://linh-test-alb-581342174.ap-southeast-1.elb.amazonaws.com:80```
+
 - Tạo Frontend Service, chọn backend-target-group, listener tương ứng.
 
 #### 6. Test kết nối tới ALB & truy cập ứng dụng, thử add/delete user
