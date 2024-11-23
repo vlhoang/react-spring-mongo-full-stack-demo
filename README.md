@@ -59,9 +59,10 @@ Nhập password, Enter
 - frontend-tg: Type IP, port 3000, Healthcheck default. 
 - backend-tg: Type IP, port 8080, Healthcheck: /api/students overwrite health checkport 8080
 - Cấu hình trên Application Load Balancer để rule /api/* trỏ vào backend-tg, còn lại default trỏ vào frontend-tg
+
 #### 4. ⁠Triển khai Backend
 - Build Dockerimage và push lên ECR. 
-- Tạo Backend Task definition, lưu ý overwrite MONGO_URL cho backend (lưu ý password đang lưu plaintex, cần cải thiện trong tương lai sử dụng Secret Manager)
+- Tạo Backend Task definition, lưu ý overwrite `MONGO_URL` cho backend (lưu ý password đang lưu plaintex, cần cải thiện trong tương lai sử dụng Secret Manager)
 - Ví dụ: ```mongodb://linhadmin:thisismypassword@linh-mongo.cluster-cwpdzas1s9oa.ap-southeast-1.docdb.amazonaws.com:27017/dev```
 - Tạo Backend Service, chọn backend-target-group, listener tương ứng.
 - Test API vd GET ```<alb-domain>:80/api/students```, kết quả trả về danh sách students theo dạng Json là OK.
@@ -72,7 +73,7 @@ Nhập password, Enter
 - Tạo Frontend Task definition, lưu ý overwrite REACT_APP_API_URL để frontend nhận diện được backend API theo cấu trúc: ```<alb-domain>:80/api```
 - Ví dụ: ```http://linh-test-alb-581342174.ap-southeast-1.elb.amazonaws.com:80```
 
-- Tạo Frontend Service, chọn backend-target-group, listener tương ứng.
+- Tạo Frontend Service, chọn frontend-target-group, listener tương ứng.
 
 #### 6. Test kết nối tới ALB & truy cập ứng dụng, thử add/delete user
 - URL sample: ```http://linh-test-alb-581342174.ap-southeast-1.elb.amazonaws.com:80```
@@ -83,3 +84,4 @@ Nhập password, Enter
 <Creating>
 
 ## Chúc các bạn deploy thành công!
+
