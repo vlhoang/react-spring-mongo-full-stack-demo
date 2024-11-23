@@ -6,11 +6,11 @@
 ## Giải thích về cấu trúc project
 ### Frontend
 - Nodejs project có nhiệm vụ list, add, delete users.
-- Dockercompose file build ra image base trên Node20, expose port 3000.
+- Dockerfile build ra image base trên Node20, expose port 3000.
 - Docker image nhận biến môi trường: REACT_APP_API_URL là url của API Backend. vd: localhost:8080
 ### Backend
 - Java Spring boot có nhiệm vụ cung cấp API list, add, delete users.
-- Dockercompose file build ra image chạy trên Java OpenJDK, expose port 8080.
+- Dockerfile file build ra image chạy trên Java OpenJDK, expose port 8080.
 - Docker image nhận biến môi trường: MONGO_URL là url của MongoDB. vd: mongodb://database:27017/dev (*do Mongo local không set password, nếu sd DocumentDB connection URL sẽ khác.)
 ### Database
 - Sử dụng image Mongo:5.0, port 27017.
