@@ -1,4 +1,4 @@
-# CICD sử dụng CodePipeline
+# CICD sử dụng CodePipeline (hướng dẫn dành cho khóa DevOps)
 
 ### Yêu cầu:
 - Đảm bảo rằng bạn đã build frontend & backend Docker Image sau đó push thành công lên ECR repository.

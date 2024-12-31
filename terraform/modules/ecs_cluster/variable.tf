@@ -46,21 +46,13 @@ variable "backend_ecr_image_url" {
   nullable = false
 }
 
-variable mongodb_username_secret_arn{
+variable "alb_dns" {
   type = string
-  description = "The ARN of the secret for MongoDB username"
   nullable = false
 }
 
-variable mongodb_password_secret_arn{
+variable mongodb_connection_string_secret_arn{
   type = string
-  description = "The ARN of the secret for MongoDB password"
+  description = "The ARN of the MongoDB connection string secret"
   nullable = false
-}
-
-variable "mongodb_endpoint" {
-  type = string
-  description = "The endpoint of the MongoDB cluster"
-  nullable = false
-  
 }

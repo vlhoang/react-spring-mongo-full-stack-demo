@@ -70,7 +70,7 @@ Nhập password, Enter
 #### 5. Triển khai Frontend
 - Build Frontend tạo ra Docker image, push lên ECR.
 
-- Tạo Frontend Task definition, lưu ý overwrite `REACT_APP_API_URL` để frontend nhận diện được backend API theo cấu trúc: ```<alb-domain>:80/api```
+- Tạo Frontend Task definition, lưu ý overwrite `REACT_APP_API_URL` để frontend nhận diện được backend API theo cấu trúc: ```<alb-domain>:80```
 - Ví dụ: ```http://linh-test-alb-581342174.ap-southeast-1.elb.amazonaws.com:80```
 
 - Tạo Frontend Service, chọn frontend-target-group, listener tương ứng.

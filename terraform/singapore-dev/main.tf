@@ -6,13 +6,6 @@ terraform {
       version = ">= 5.0.0"
     }
   }
-  # Để cho bài lab đơn giản và không mất công chuẩn bị S3, DynamoDB, tôi sẽ không sử dụng remote state
-  # backend "s3" {
-  #   bucket         = "udemy-terraform-state-singapore-linh"
-  #   key            = "udemy-terraform"
-  #   region         = "ap-southeast-1"
-  #   dynamodb_table = "udemy-terraform-state"
-  # }
 }
 
 provider "aws" {
@@ -33,6 +26,16 @@ module "security" {
   source = "../modules/security"
   region = var.region
   vpc_id = module.networking.vpc_id
+}
+
+module "bastion" {
+  source = "../modules/bastion"
+  region = var.region
+  instance_type = "t3.small"
+  security_groups = [
+    module.security.bastion_security_group_id
+  ]
+  subnet_id = module.networking.public_subnet_ids[0]
 }
 
 module "database"{
@@ -65,7 +68,10 @@ module "ecs_cluster"{
     module.security.private_security_group_id
   ]
   alb_arn = module.load_balance.alb_arn
-  nodejs_target_group_arn = module.load_balance.target_group_arn
-  nodejs_ecr_image_url = var.ecr_repo_url
-
+  frontend_target_group_arn = module.load_balance.frontend_target_group_arn
+  frontend_ecr_image_url = var.frontend_ecr_repo_url
+  backend_target_group_arn = module.load_balance.backend_target_group_arn
+  backend_ecr_image_url = var.backend_ecr_repo_url
+  alb_dns = "http://${module.load_balance.alb_dns}:80"
+  mongodb_connection_string_secret_arn = module.database.mongodb_connection_string_secret_arn
 }

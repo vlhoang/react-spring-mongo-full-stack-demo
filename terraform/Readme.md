@@ -6,22 +6,32 @@
 - ECS Service BE
 - Document DB - MongoEngine
 - SecretManager chứa username, password của MongoDB.
+### Các bước thực hiện
+#### Step 1: Build docker image cho FE/BE và push lên ECR repository.
+1. Tạo sẵn 2 repository trên aws ECR ví dụ
+    - devops-final-assignment-frontend
+    - devops-final-assignment-backend
+2. Build Frontend và push lên ECR
+3. Build Backend và push lên ECR
 
-### Commands Terraform:
-```cd singapore-dev```
-#### Chỉnh sửa file sau: singapore-dev/terraform.tfvars
-- Dòng 6: ```frontend_ecr_repo_url``` ->chỉnh sửa thành url ECR repository của bạn ví dụ:
-```430950558682.dkr.ecr.ap-southeast-1.amazonaws.com/nodejs-random-color:ver-2```
-- Dòng 7: backend_ecr_repo_url ->chỉnh sửa thành url ECR repository của bạn ví dụ:
-```430950558682.dkr.ecr.ap-southeast-1.amazonaws.com/nodejs-random-color:ver-2```
-- Dòng 8: ```mongodb_username``` ->chỉnh sửa thành username của bạn vd:
-```linhadmin```
-- Dòng 9: ```mongodb_password``` ->chỉnh sửa thành username của bạn vd: ```123456789``` (!Lưu ý không commit password lên Git)
-
-
-#### Chạy lệnh sau:
+#### Step 3 triển khai Terraform:
+- Thay thế URI của Frontend, Backend vào file `singapore-dev/terraform.tfvars` dòng số 6, 7.
+- ```cd singapore-dev```
 - ```terraform init```
-- ```terraform plan --var-file "terraform.tfvars"```
-- ```terraform apply --var-file "terraform.tfvars"```
+- ```terraform plan --var-file terraform.tfvars```
+- ```terraform apply --var-file terraform.tfvars```
 
-#### Kiểm tra các resource được tạo ra & thử truy cập ALB.
+#### Step 4 Kiểm tra các resource được tạo ra & thử truy cập ALB.
+- Truy cập ứng dụng thông qua ALB's DNS Vd:
+```http://udemy-devops-alb-1794027343.ap-southeast-1.elb.amazonaws.com```
+- Thử add một vài user, xóa user.
+
+#### Step 5: Cấu hình CICD cho repo Frontend & Backend 
+Các bạn có thể tạo 2 repository trên Github từ 2 thư mục sau cho dễ config
+- react-student-management
+- spring-boot-student-app-api
+
+#### Step 6: Xóa toàn bộ resource đã tạo ra.
+- ```terraform destroy --var-file terraform.tfvars```
+
+

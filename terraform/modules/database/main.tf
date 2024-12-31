@@ -13,15 +13,6 @@ resource "aws_secretsmanager_secret_version" "mongodb_password_secret_version" {
   secret_string = random_password.secret_password.result
 }
 
-resource "aws_secretsmanager_secret" "mongodb_username_secret" {
-  name = "mongodb_username_secret"
-}
-
-resource "aws_secretsmanager_secret_version" "mongodb_username_secret_version" {
-  secret_id     = aws_secretsmanager_secret.mongodb_username_secret.id
-  secret_string = var.db_username
-}
-
 resource "aws_docdb_cluster_parameter_group" "mongo-custom-parameter-group" {
   family      = "docdb5.0"
   name        = "mongodb-custom-parameter-group"
@@ -32,9 +23,10 @@ resource "aws_docdb_cluster_parameter_group" "mongo-custom-parameter-group" {
     value = "disabled"
   }
 }
+
 resource "aws_docdb_subnet_group" "mongo_subnet_group" {
   name       = "mongodb-subnet-group"
-  subnet_ids = db_subnets
+  subnet_ids = var.db_subnets
 
   tags = {
     Name = "My docdb subnet group"
@@ -58,4 +50,15 @@ resource "aws_docdb_cluster_instance" "cluster_instances" {
   identifier         = "udemy-mongodb-cluster-${count.index}"
   cluster_identifier = aws_docdb_cluster.mongodb_cluster.id
   instance_class     = "db.t3.medium"
+}
+
+#TODO: Create a secret for the connection string
+
+resource "aws_secretsmanager_secret" "mongodb_connection_string" {
+  name = "mongodb_connection_string"
+}
+
+resource "aws_secretsmanager_secret_version" "mongodb_connection_string_version" {
+  secret_id     = aws_secretsmanager_secret.mongodb_connection_string.id
+  secret_string =  "mongodb://${var.db_username}:${aws_secretsmanager_secret_version.mongodb_password_secret_version.secret_string}@${aws_docdb_cluster.mongodb_cluster.endpoint}:27017/dev"
 }

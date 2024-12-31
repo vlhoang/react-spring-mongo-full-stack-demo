@@ -22,5 +22,5 @@ variable "db_username" {
   type = string
   description = "Admin Username for the database"
   nullable = false
-  default = "udemy"
+  default = "udemy_admin"
 }

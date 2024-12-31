@@ -1,5 +1,5 @@
 # Create VPC
-# Tôi sẽ sử dụng module VPC có sẵn của terraform để tạo VPC cho nhanh.
+# Sử dụng module VPC có sẵn của terraform để tạo VPC cho nhanh (thay vì tạo từng thành phần VPC, subnet, route table, internet gateway, ...)
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.0.0"
