@@ -10,10 +10,10 @@ resource "aws_lb_target_group" "frontend_target_group" {
     path                = "/"
     protocol            = "HTTP"
     port                = "3000"
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
+    healthy_threshold   = 5
+    unhealthy_threshold = 5
     timeout             = 5
-    interval            = 20
+    interval            = 30
   }
 }
 
@@ -28,10 +28,10 @@ resource "aws_lb_target_group" "backend_target_group" {
     path                = "/api/students"
     protocol            = "HTTP"
     port                = "8080"
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
+    healthy_threshold   = 5
+    unhealthy_threshold = 5
     timeout             = 5
-    interval            = 20
+    interval            = 30
   }
 }
 #Application Load Balancer

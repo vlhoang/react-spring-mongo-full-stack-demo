@@ -56,7 +56,6 @@ module "load_balance" {
   load_balance_security_group_ids = [
     module.security.public_security_group_id
   ]
-
 }
 
 module "ecs_cluster"{

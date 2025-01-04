@@ -1,11 +1,11 @@
 #create a secret for Database
 resource "random_password" "secret_password" {
   length  = 16
-  special = true
+  special = false
 }
 
 resource "aws_secretsmanager_secret" "mongodb_password_secret" {
-  name = "mongodb_password_secret"
+  name = "mongodb_password_secret_2"
 }
 
 resource "aws_secretsmanager_secret_version" "mongodb_password_secret_version" {
@@ -55,7 +55,7 @@ resource "aws_docdb_cluster_instance" "cluster_instances" {
 #TODO: Create a secret for the connection string
 
 resource "aws_secretsmanager_secret" "mongodb_connection_string" {
-  name = "mongodb_connection_string"
+  name = "mongodb_connection_string_2"
 }
 
 resource "aws_secretsmanager_secret_version" "mongodb_connection_string_version" {
